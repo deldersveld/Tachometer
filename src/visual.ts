@@ -432,11 +432,15 @@ module powerbi.extensibility.visual {
         private range1Arc: d3.svg.Arc<any>;
         private range2Arc: d3.svg.Arc<any>;
         private range3Arc: d3.svg.Arc<any>;
+		private range4Arc: d3.svg.Arc<any>;
+		private range5Arc: d3.svg.Arc<any>;
         private centerArc: d3.svg.Arc<any>;
 
         private range1ArcPath: d3.Selection<any>;
         private range2ArcPath: d3.Selection<any>;
         private range3ArcPath: d3.Selection<any>;
+		private range4ArcPath: d3.Selection<any>;
+		private range5ArcPath: d3.Selection<any>;
         private centerArcPath: d3.Selection<any>;
         private calloutLabel: d3.Selection<any>;
         private calloutRectangle: TachometerRectangle;
@@ -532,11 +536,15 @@ module powerbi.extensibility.visual {
             this.range1Arc = d3.svg.arc();
             this.range2Arc = d3.svg.arc();
             this.range3Arc = d3.svg.arc();
+			this.range4Arc = d3.svg.arc();
+			this.range5Arc = d3.svg.arc();
             this.centerArc = d3.svg.arc();
 
             this.range1ArcPath = mainGraphicsContext.append('path').classed('range1Arc', true);
             this.range2ArcPath = mainGraphicsContext.append('path').classed('range2Arc', true);
             this.range3ArcPath = mainGraphicsContext.append('path').classed('range3Arc', true);
+			this.range4ArcPath = mainGraphicsContext.append('path').classed('range3Arc', true);
+			this.range5ArcPath = mainGraphicsContext.append('path').classed('range3Arc', true);
             this.needle = overlayGraphicsContext.append('path') //The needle is added to overlay context to make sure it always renders above target indicator
                 .classed('needle', true)
                 .attr('stroke-width', Tachometer.DefaultStyleProperties.indicator.thickness)
@@ -1005,6 +1013,8 @@ module powerbi.extensibility.visual {
                 case percentType.target: hundredPercentValue = axisData.target.value; break;
                 case percentType.range2Start: hundredPercentValue = axisData.range2.startValue; break;
                 case percentType.range3Start: hundredPercentValue = axisData.range3.startValue; break;
+				case percentType.range4Start: hundredPercentValue = axisData.range4.startValue; break;
+				case percentType.range5Start: hundredPercentValue = axisData.range5.startValue; break;
             }
 
             var percent: number = axisData.valueRange !== 0 ? Math.abs((axisData.value - baseValue) * 100 / (hundredPercentValue - baseValue)) : 0;
@@ -1977,6 +1987,8 @@ module powerbi.extensibility.visual {
             var range1 = axisData.range1;
             var range2 = axisData.range2;
             var range3 = axisData.range3;
+			var range4 = axisData.range4;
+			var range5 = axisData.range5;
 
             var currentStart = axisData.startValue;
             var currentEnd = axisData.endValue;
@@ -1985,6 +1997,8 @@ module powerbi.extensibility.visual {
                 currentStart,
                 range2.startValue,
                 range3.startValue,
+				range4.startValue,
+                range5.startValue,
                 currentEnd
             ];
 
@@ -2001,11 +2015,15 @@ module powerbi.extensibility.visual {
             range1.startValue = boarders[0];
             range1.endValue = range2.startValue = boarders[1];
             range2.endValue = range3.startValue = boarders[2];
-            range3.endValue = boarders[3];
+			range3.endValue = range4.startValue = boarders[3];
+			range4.endValue = range5.startValue = boarders[4];
+            range5.endValue = boarders[5];
 
             axisData.range1 = this.completeAxisRange(axisData.range1, radius);
             axisData.range2 = this.completeAxisRange(axisData.range2, radius);
             axisData.range3 = this.completeAxisRange(axisData.range3, radius);
+			axisData.range4 = this.completeAxisRange(axisData.range4, radius);
+			axisData.range5 = this.completeAxisRange(axisData.range5, radius);
 
             axisData.radius = radius;
             axisData.axisLabelRadius = radius + this.gaugeStyle.labels.padding;
@@ -2070,6 +2088,34 @@ module powerbi.extensibility.visual {
 
             this.range3ArcPath
                 .attr('d', range3Arc)
+                .attr('transform', transformString)
+                .style('fill', range.rangeColor);
+				
+			var range = viewModel.axis.range4;
+            var range4Arc = this.range4Arc;
+
+            range4Arc
+                .innerRadius(range.innerRadius)
+                .outerRadius(range.radius)
+                .startAngle(range.startAngle)
+                .endAngle(range.endAngle);
+
+            this.range4ArcPath
+                .attr('d', range4Arc)
+                .attr('transform', transformString)
+                .style('fill', range.rangeColor);
+				
+			var range = viewModel.axis.range5;
+            var range5Arc = this.range5Arc;
+
+            range5Arc
+                .innerRadius(range.innerRadius)
+                .outerRadius(range.radius)
+                .startAngle(range.startAngle)
+                .endAngle(range.endAngle);
+
+            this.range5ArcPath
+                .attr('d', range5Arc)
                 .attr('transform', transformString)
                 .style('fill', range.rangeColor);
 
@@ -2263,6 +2309,10 @@ module powerbi.extensibility.visual {
             axisData.range2.endValue = Tachometer.UninitializedEndValue;
             axisData.range3.startValue = Tachometer.UnintializedRangeStartValue;
             axisData.range3.endValue = Tachometer.UninitializedEndValue;
+			axisData.range4.startValue = Tachometer.UnintializedRangeStartValue;
+            axisData.range4.endValue = Tachometer.UninitializedEndValue;
+			axisData.range5.startValue = Tachometer.UnintializedRangeStartValue;
+            axisData.range5.endValue = Tachometer.UninitializedEndValue;
             axisData.target.value = Tachometer.UninitializedStartValue;
             axisData.target.innerRadiusRatio = Tachometer.UninitializedRatio;
 
@@ -2535,7 +2585,7 @@ module powerbi.extensibility.visual {
         private completeTarget(target: TachometerTargetData, axisData: TachometerAxisData): TachometerTargetData {
             target.radius = axisData.radius;
             target.innerRadius = target.innerRadiusRatio === Tachometer.UninitializedRatio
-                ? Math.max(axisData.range1.innerRadius, axisData.range2.innerRadius, axisData.range3.innerRadius)
+                ? Math.max(axisData.range1.innerRadius, axisData.range2.innerRadius, axisData.range3.innerRadius, axisData.range4.innerRadius, axisData.range5.innerRadius)
                 : target.radius * target.innerRadiusRatio
                 ;
             target.innerRadius = Tachometer.clamp(target.innerRadius, axisData.indicator.baseRadius, axisData.radius);
