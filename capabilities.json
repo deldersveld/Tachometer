@@ -30,6 +30,16 @@
                     "kind": "Measure",
                     "displayName": "Range3 Start Value",
                     "description": "Start value of Range3"
+				}, {
+                    "name": "Range4StartValue",
+                    "kind": "Measure",
+                    "displayName": "Range4 Start Value",
+                    "description": "Start value of Range4"
+				}, {
+                    "name": "Range5StartValue",
+                    "kind": "Measure",
+                    "displayName": "Range5 Start Value",
+                    "description": "Start value of Range5"
                 }, {
                     "name": "DisplayFilter",
                     "kind": "Measure",
@@ -141,6 +151,48 @@
                         "startValue": {
                             "displayName": "Start Value",
                             "description": "Range3 start value",
+                            "type": { "numeric": true }
+                        }
+                    }
+                },
+				 "range4": {
+                    "displayName": "Range 4",
+                    "properties": {
+                        "rangeColor": {
+                            "displayName": "Color",
+                            "description": "Range4 color",
+                            "type": { "fill": { "solid": { "color": true } } }
+                        },
+                        "thickness": {
+                            "displayName": "Thickness",
+                            "description": "Range4 thickness as percentage of gauge radius",
+                            "placeHolderText": "50%",
+                            "type": { "numeric": true }
+                        },
+                        "startValue": {
+                            "displayName": "Start Value",
+                            "description": "Range4 start value",
+                            "type": { "numeric": true }
+                        }
+                    }
+                },
+				 "range5": {
+                    "displayName": "Range 5",
+                    "properties": {
+                        "rangeColor": {
+                            "displayName": "Color",
+                            "description": "Range5 color",
+                            "type": { "fill": { "solid": { "color": true } } }
+                        },
+                        "thickness": {
+                            "displayName": "Thickness",
+                            "description": "Range5 thickness as percentage of gauge radius",
+                            "placeHolderText": "50%",
+                            "type": { "numeric": true }
+                        },
+                        "startValue": {
+                            "displayName": "Start Value",
+                            "description": "Range5 start value",
                             "type": { "numeric": true }
                         }
                     }
@@ -334,6 +386,14 @@
                                 {
                                     "value": "Range3Start",
                                     "displayName": "Range 3 Start"
+                                },
+                                {
+                                    "value": "Range4Start",
+                                    "displayName": "Range 4 Start"
+                                },
+                                {
+                                    "value": "Range5Start",
+                                    "displayName": "Range 5 Start"
                                 }
                                 ]
                             }
@@ -384,6 +444,8 @@
                         "TargetValue": { "min": 0, "max": 1 },
                         "Range2StartValue": { "min": 0, "max": 1 },
                         "Range3StartValue": { "min": 0, "max": 1 },
+						"Range4StartValue": { "min": 0, "max": 1 },
+                        "Range5StartValue": { "min": 0, "max": 1 },
                         "DisplayFilter": { "min": 0, "max": 1 }
                     }
                 ],
@@ -396,6 +458,8 @@
                             { "bind": { "to": "TargetValue" } },
                             { "bind": { "to": "Range2StartValue" } },
                             { "bind": { "to": "Range3StartValue" } },
+							{ "bind": { "to": "Range4StartValue" } },
+                            { "bind": { "to": "Range5StartValue" } },
                             { "bind": { "to": "DisplayFilter" } }
                         ]
                     }
