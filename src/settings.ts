@@ -34,7 +34,9 @@ module powerbi.extensibility.visual {
         endValue = "EndValue" as any,
         target = "Target" as any,
         range2Start = "Range2Start" as any,
-        range3Start = "Range3Start" as any
+        range3Start = "Range3Start" as any,
+		range4Start = "Range4Start" as any,
+        range5Start = "Range5Start" as any
     }    
 }
 
