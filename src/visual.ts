@@ -147,6 +147,8 @@ module powerbi.extensibility.visual {
         range1: TachometerRangeData;
         range2: TachometerRangeData;
         range3: TachometerRangeData;
+		range4: TachometerRangeData;
+        range5: TachometerRangeData;
         target: TachometerTargetData;
         dataLabels: TachometerDataLabelsData;
         offset: Offset;
@@ -303,6 +305,8 @@ module powerbi.extensibility.visual {
         targetValue: string;
         range2StartValue: string;
         range3StartValue: string;
+		range4StartValue: string;
+        range5StartValue: string;
         displayFilter: string;
     }
 
@@ -382,6 +386,8 @@ module powerbi.extensibility.visual {
         private static DefaultRange1Color = '#0EFF23'; //Green;
         private static DefaultRange2Color = '#FFFE00'; //Yellow
         private static DefaultRange3Color = 'red'; //Red
+		private static DefaultRange4Color = 'red'; //Red
+		private static DefaultRange5Color = 'red'; //Red
         private static defaultLabelColor: string = '#777777';
 
         private static DefaultCalloutFontSizeInPt = 20;
@@ -502,6 +508,8 @@ module powerbi.extensibility.visual {
             targetValue: 'TargetValue',
             range2StartValue: 'Range2StartValue',
             range3StartValue: 'Range3StartValue',
+			range4StartValue: 'Range2StartValue',
+            range5StartValue: 'Range3StartValue',
             displayFilter: 'DisplayFilter',
         };
 
@@ -603,6 +611,26 @@ module powerbi.extensibility.visual {
                     startValue: Tachometer.UnintializedRangeStartValue,
                     endValue: Tachometer.UninitializedEndValue,
                     rangeColor: Tachometer.DefaultRange3Color,
+                    innerRadiusRatio: 0.5,
+                    radius: 1,
+                    innerRadius: 0.5,
+                    startAngle: 0,
+                    endAngle: 0,
+                },
+				range4: {
+                    startValue: Tachometer.UnintializedRangeStartValue,
+                    endValue: Tachometer.UninitializedEndValue,
+                    rangeColor: Tachometer.DefaultRange4Color,
+                    innerRadiusRatio: 0.5,
+                    radius: 1,
+                    innerRadius: 0.5,
+                    startAngle: 0,
+                    endAngle: 0,
+                },
+				range5: {
+                    startValue: Tachometer.UnintializedRangeStartValue,
+                    endValue: Tachometer.UninitializedEndValue,
+                    rangeColor: Tachometer.DefaultRange5Color,
                     innerRadiusRatio: 0.5,
                     radius: 1,
                     innerRadius: 0.5,
@@ -2292,6 +2320,20 @@ module powerbi.extensibility.visual {
                                 axisData.range3.startValue = value;
                                 axisData.tooltipInfo.push({ displayName: Tachometer.RoleNames.range3StartValue, value: value.toString() });
                             }
+						} if (col.roles[Tachometer.RoleNames.range4StartValue]) {
+                            if (value === undefined || isNaN(Number(value)))
+                                axisData.range4.startValue = Tachometer.UninitializedStartValue;
+                            else {
+                                axisData.range4.startValue = value;
+                                axisData.tooltipInfo.push({ displayName: Tachometer.RoleNames.range4StartValue, value: value.toString() });
+                            }
+						} if (col.roles[Tachometer.RoleNames.range5StartValue]) {
+                            if (value === undefined || isNaN(Number(value)))
+                                axisData.range5.startValue = Tachometer.UninitializedStartValue;
+                            else {
+                                axisData.range5.startValue = value;
+                                axisData.tooltipInfo.push({ displayName: Tachometer.RoleNames.range5StartValue, value: value.toString() });
+                            }
                         } if (col.roles[Tachometer.RoleNames.displayFilter]) {
                             if (value === undefined || isNaN(Number(value)) || value == 0)
                                 axisData.show = false;
@@ -2311,6 +2353,8 @@ module powerbi.extensibility.visual {
             axisData.range1 = Tachometer.transformRangeSettings(dataView, 'range1', axisData.range1, Tachometer.DefaultRange1Color);
             axisData.range2 = Tachometer.transformRangeSettings(dataView, 'range2', axisData.range2, Tachometer.DefaultRange2Color);
             axisData.range3 = Tachometer.transformRangeSettings(dataView, 'range3', axisData.range3, Tachometer.DefaultRange3Color);
+			axisData.range4 = Tachometer.transformRangeSettings(dataView, 'range4', axisData.range4, Tachometer.DefaultRange4Color);
+			axisData.range5 = Tachometer.transformRangeSettings(dataView, 'range5', axisData.range5, Tachometer.DefaultRange5Color);
             axisData.dataLabels = Tachometer.transformDataLabelSettings(dataView, 'labels', Tachometer.getDefaultTachometerLabelSettings());
             var dataLabels = axisData.dataLabels;
             if (dataLabels.show) {
@@ -3717,6 +3761,12 @@ module powerbi.extensibility.visual {
                     break;
                 case 'range3':
                     this.enumerateRange(enumeration, 'range3', 'Range 3', true, Tachometer.RoleNames.range3StartValue);
+                    break;
+				case 'range4':
+                    this.enumerateRange(enumeration, 'range4', 'Range 4', true, Tachometer.RoleNames.range4StartValue);
+                    break;
+				case 'range5':
+                    this.enumerateRange(enumeration, 'range5', 'Range 5', true, Tachometer.RoleNames.range3StartValue);
                     break;
                 case 'target':
                     this.enumerateTarget(enumeration);
